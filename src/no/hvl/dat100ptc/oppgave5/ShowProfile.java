@@ -1,6 +1,7 @@
 package no.hvl.dat100ptc.oppgave5;
 
 import easygraphics.EasyGraphics;
+
 import no.hvl.dat100ptc.TODO;
 import no.hvl.dat100ptc.oppgave1.GPSPoint;
 import no.hvl.dat100ptc.oppgave2.GPSData;
@@ -45,13 +46,17 @@ public class ShowProfile extends EasyGraphics {
 
 		// ybase indicates the position on the y-axis where the columns should start
 	
-		int x = MARGIN,y;
-
-		// TODO - START
-
-		throw new UnsupportedOperationException(TODO.method());
-	
-		// TODO - SLUTT
+		int x = MARGIN;
+		int elevation = 0; 
+		int SPACE = 3;
+		
+		for (int i = 0; i < gpspoints.length; i++) {
+			if (gpspoints[i].getElevation() > 0) {
+				elevation = (int) gpspoints[i].getElevation();
+				
+				setColor(0, 0, 255);
+				drawLine(x + i * SPACE, ybase, x + i * SPACE, ybase - elevation);
+			}
+		}
 	}
-
 }

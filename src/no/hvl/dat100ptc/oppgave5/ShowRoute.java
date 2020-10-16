@@ -2,6 +2,8 @@ package no.hvl.dat100ptc.oppgave5;
 
 import javax.swing.JOptionPane;
 
+
+
 import easygraphics.EasyGraphics;
 import no.hvl.dat100ptc.TODO;
 import no.hvl.dat100ptc.oppgave1.GPSPoint;
@@ -11,7 +13,7 @@ import no.hvl.dat100ptc.oppgave4.GPSComputer;
 public class ShowRoute extends EasyGraphics {
 
 	private static int MARGIN = 50;
-	private static int MAPXSIZE = 800;
+	private static int MAPXSIZE = 8+00;
 	private static int MAPYSIZE = 800;
 
 	private GPSPoint[] gpspoints;
@@ -45,45 +47,86 @@ public class ShowRoute extends EasyGraphics {
 		double maxlon = GPSUtils.findMax(GPSUtils.getLongitudes(gpspoints));
 		double minlon = GPSUtils.findMin(GPSUtils.getLongitudes(gpspoints));
 
-		double xstep = MAPXSIZE / (Math.abs(maxlon - minlon)); 
+		return MAPXSIZE / (Math.abs(maxlon - minlon)); 
 
-		return xstep;
 	}
 
 	// antall y-pixels per breddegrad
 	public double ystep() {
-	
-		double ystep;
 		
-		// TODO - START
+		double maxlat = GPSUtils.findMax(GPSUtils.getLatitudes(gpspoints));
+		double minlat = GPSUtils.findMin(GPSUtils.getLatitudes(gpspoints));
 		
-		throw new UnsupportedOperationException(TODO.method());
-
-		// TODO - SLUTT
-		
+		return MAPYSIZE / (Math.abs(maxlat - minlat));
 	}
 
 	public void showRouteMap(int ybase) {
-
-		// TODO - START
 		
-		throw new UnsupportedOperationException(TODO.method());
+		int RADIUS = 4;
+		int x;
+		int y;
+		int startX = 0;
+		int startY = 0;
+		double elevation = 0.0;
 		
-		// TODO - SLUTT
+		setColor (0, 255, 0);
+		
+		for (int i = 0; i < gpspoints.length; i++) {
+			
+			x = MARGIN + (int) ((gpspoints[i].getLongitude() - GPSUtils.findMin(GPSUtils.getLongitudes(gpspoints))) * xstep());
+			y = ybase - (int) ((gpspoints[i].getLatitude() - GPSUtils.findMin(GPSUtils.getLatitudes(gpspoints))) * ystep());
+			
+			if(i < 1) {
+				startX = x;
+				startY = y;
+				
+				fillCircle(startX, startY, RADIUS);
+			} else {
+				
+				if (gpspoints[i].getElevation() > elevation) {
+					setColor(255, 0, 0);
+				} else if (gpspoints[i].getElevation() < elevation) {
+					setColor(0, 255, 0);
+				}
+				elevation = gpspoints[i].getElevation();
+				
+				drawLine(startX, startY, x, y);
+				startX = x;
+				startY = y;
+				
+				
+				fillCircle(x, y, RADIUS);
+			}
+		}
 	}
 
-	public void showStatistics() {
+		public void showStatistics() {
 
-		int TEXTDISTANCE = 20;
+			int TEXTDISTANCE = 20;
+			int WEIGHT = 80;
 
-		setColor(0,0,0);
-		setFont("Courier",12);
+			setColor(0,0,0);
+			setFont("Courier",12);
 		
-		// TODO - START
+			String text[] = {	"Total time",
+								"Total distance",
+								"Total Elevation",
+								"Max speed",
+								"Average speed",
+								"Energy" };
 		
-		throw new UnsupportedOperationException(TODO.method());
+			String statistics[] = { GPSUtils.formatTime(gpscomputer.totalTime()) + " ",
+									GPSUtils.formatDouble(gpscomputer.totalDistance()/1000) + " km ",
+									GPSUtils.formatDouble(gpscomputer.totalElevation()) + " m ",
+									GPSUtils.formatDouble(gpscomputer.maxSpeed()) + " km/t ",
+									GPSUtils.formatDouble(gpscomputer.averageSpeed()) + " km/t ",
+									GPSUtils.formatDouble(gpscomputer.totalKcal(WEIGHT)) + " kcal "};
 		
-		// TODO - SLUTT;
-	}
-
+			for (int i = 0; i < statistics.length; i++) {
+				drawString(text[i], TEXTDISTANCE, TEXTDISTANCE + i*TEXTDISTANCE);
+				drawString("       :" + statistics[i], TEXTDISTANCE*5, TEXTDISTANCE + i*TEXTDISTANCE);
+			}
+			
+		}
 }
+

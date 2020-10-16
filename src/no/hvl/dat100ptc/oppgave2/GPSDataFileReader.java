@@ -1,7 +1,6 @@
 package no.hvl.dat100ptc.oppgave2;
 
 import java.io.*;
-
 import javax.swing.*;
 
 public class GPSDataFileReader {

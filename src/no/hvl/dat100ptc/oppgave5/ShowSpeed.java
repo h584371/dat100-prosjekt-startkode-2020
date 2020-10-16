@@ -2,6 +2,7 @@ package no.hvl.dat100ptc.oppgave5;
 
 import javax.swing.JOptionPane;
 
+
 import easygraphics.EasyGraphics;
 import no.hvl.dat100ptc.TODO;
 import no.hvl.dat100ptc.oppgave1.GPSPoint;
@@ -46,12 +47,17 @@ public class ShowSpeed extends EasyGraphics {
 		// get segments speeds from the GPS computer object		
 		double[] speeds = gpscomputer.speeds();
 
-		int x = MARGIN,y;
-
-		// TODO - START
+		int SPACE = 2;
+		int x = MARGIN;
+		int y = (int) (ybase - gpscomputer.averageSpeed());
 		
-		throw new UnsupportedOperationException(TODO.method());
-	
-		// TODO - SLUTT
+		setColor (0, 0, 255);
+		
+		for (int i = 0; i < speeds.length; i++) {
+			drawLine(x + i * SPACE, ybase, x + i * SPACE, (int) (ybase - speeds[i]));
+		}
+		
+		setColor (255, 0, 0);
+		drawLine(x, y, x + N * SPACE, y);
 	}
 }
